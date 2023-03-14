@@ -6,7 +6,7 @@ Created on March 13, 2023
 """
 # Libraries
 from turtle import shape
-from Deblurring_NN import X_test
+# from Deblurring_NN import X_test
 import keras
 from keras.models import load_model
 from keras.datasets import cifar10
@@ -15,15 +15,15 @@ from keras import models
 from keras import layers
 from keras.models import Model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.optimizers import Adam
 import os
 import sys
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 from keras import backend as K
-from skimage.measure import compare_ssim as ssim
-from skimage.measure import compare_psnr as psnr
+from skimage.metrics import structural_similarity as ssim
+from skimage.metrics import peak_signal_noise_ratio as psnr
 from random import randint
 import zipfile
 import cv2
@@ -70,8 +70,8 @@ def extract_train(inputZip,imageSize):
         # Separate files into train, validation and test
         train_set, test_set = train_test_split(archive.namelist(), test_size=0.3, random_state=0)
         val_set, test_set = train_test_split(test_set, test_size=0.5, random_state=0)
-        train = np.zeros([len(archive.namelist())*0.3, imageSize, imageSize, 3])
-        val = np.zeros([len(archive.namelist())*0.15, imageSize, imageSize, 3])
+        train = np.zeros([len(train_set), imageSize, imageSize, 3])
+        val = np.zeros([len(val_set), imageSize, imageSize, 3])
 
         for idx, filename in enumerate(train_set):
             data = archive.read(filename)
@@ -88,7 +88,7 @@ def extract_train(inputZip,imageSize):
 def extract_test(inputZip,test_set):
     with zipfile.ZipFile(inputZip, mode="r") as archive:
         
-        test = np.zeros([len(archive.namelist())*0.15, imageSize, imageSize, 3])
+        test = np.zeros([len(test_set), imageSize, imageSize, 3])
 
         for idx, filename in enumerate(test_set):
             data = archive.read(filename)
