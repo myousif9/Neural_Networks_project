@@ -5,8 +5,11 @@ Created on March 13, 2023
 @author: Mauricio Cespedes Tenorio
 """
 # Libraries
-from turtle import shape
+# from turtle import shape
 # from Deblurring_NN import X_test
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 import keras
 from keras.models import load_model
 from keras.datasets import cifar10
@@ -15,7 +18,7 @@ from keras import models
 from keras import layers
 from keras.models import Model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-import os
+
 import sys
 import numpy as np
 import tensorflow as tf
@@ -45,15 +48,17 @@ import cv2
 
 print(sys.argv)
 
+
 # Path to input file
 inputZip_blur = str(sys.argv[1])
 inputZip_origin = str(sys.argv[2])
 
 # Path to output dir
 saveDir = str(sys.argv[3]) # was called path
+task =  'denoise'
 
 # Zip file to save test cases
-outZip = os.path.join(saveDir, "CNN_denoising_tests.zip")
+outZip = os.path.join(saveDir, f"CNN_{task}_tests.zip")
 
 # Parameters
 kernel_s = 5
@@ -145,8 +150,8 @@ print("Data loaded!!")
 
 model = models.Sequential()
 
-model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid'),input_shape=(128, 128, 3))
-model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid'),input_shape=(128, 128, 3))
+model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
 
 # input_img = Input(shape=(128, 128, 3))
 # x = Conv2D(3, (kernel_s, kernel_s), padding='same')(input_img)
@@ -160,7 +165,7 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 
 
 es_cb = EarlyStopping(monitor='val_loss', patience=2, verbose=1, mode='auto')
-chkpt = saveDir +'deblurring_model_simple.hdf5'
+chkpt = saveDir +f'{task}_model_simple.hdf5'
 cp_cb = ModelCheckpoint(filepath = chkpt, monitor='val_loss', verbose=1, save_best_only=True, mode='auto')
 
 history = model.fit(X_train, y_train,
@@ -210,7 +215,7 @@ for i in range(x_test.shape[0]):
 
 
 ## Save results
-file = open(os.path.join(saveDir,'Illusions_deblurr.txt'),'w')
+file = open(os.path.join(saveDir,f'Illusions_{task}.txt'),'w')
 file.write('Mean PSNR'+str(np.mean(performance[:,0]))+'-'+str(np.std(performance[:,0]))) 
 file.write('Mean SSIM'+str(np.mean(performance[:,1]))+'-'+str(np.std(performance[:,1]))) 
 file.write(chkpt)
@@ -218,7 +223,7 @@ file.close()
 
 #np.save(saveDir+'jean_denoise_results',out) 
 print('Saving Results ...')
-np.save(os.path.join(saveDir,'Illusions_deblurr'),outIllusions) 
+np.save(os.path.join(saveDir,f'Illusions_{task}'),outIllusions) 
 #np.save(saveDir+'jean_denoise_inputs',x_test) 
 #np.save(saveDir+'jean_denoise_labels',y_test) 
 
