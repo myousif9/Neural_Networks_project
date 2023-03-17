@@ -55,7 +55,7 @@ inputZip_origin = str(sys.argv[2])
 
 # Path to output dir
 saveDir = str(sys.argv[3]) # was called path
-task =  'denoise'
+task =  str(sys.argv[4])
 
 # Zip file to save test cases
 outZip = os.path.join(saveDir, f"CNN_{task}_tests.zip")
@@ -150,8 +150,10 @@ print("Data loaded!!")
 
 model = models.Sequential()
 
-model.add(Conv2D(8,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
-model.add(Conv2D(8,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
 
 # input_img = Input(shape=(128, 128, 3))
 # x = Conv2D(3, (kernel_s, kernel_s), padding='same')(input_img)

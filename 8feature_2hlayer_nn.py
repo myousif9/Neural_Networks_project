@@ -55,7 +55,7 @@ inputZip_origin = str(sys.argv[2])
 
 # Path to output dir
 saveDir = str(sys.argv[3]) # was called path
-task =  'denoise'
+task =  str(sys.argv[4])
 
 # Zip file to save test cases
 outZip = os.path.join(saveDir, f"CNN_{task}_tests.zip")
