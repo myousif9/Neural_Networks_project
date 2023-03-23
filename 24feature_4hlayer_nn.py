@@ -151,9 +151,9 @@ print("Data loaded!!")
 model = models.Sequential()
 
 model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
-model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
-model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
-model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
+model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
+model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
 
 # input_img = Input(shape=(128, 128, 3))
 # x = Conv2D(3, (kernel_s, kernel_s), padding='same')(input_img)
