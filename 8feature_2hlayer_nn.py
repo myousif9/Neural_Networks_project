@@ -2,7 +2,7 @@
 """
 Created on March 13, 2023
 
-@author: Mauricio Cespedes Tenorio
+@author: Mauricio Cespedes Tenorio and Mohamed Yousif
 """
 # Libraries
 # from turtle import shape
