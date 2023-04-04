@@ -1,4 +1,4 @@
-# Neural_Networks_project
+# Psychology/Applied Math 9221B/9624B: Final Project
 
 ### Architectures for Denoising and deblurring Neural Networks
 - Architecture 1 (DN-Net denosing network, DB-Net deblurring network & RestoreNET)

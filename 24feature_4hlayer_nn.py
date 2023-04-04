@@ -31,21 +31,6 @@ from random import randint
 import zipfile
 import cv2
 
-# Image manipulation.
-# import PIL.Image
-# from io import BytesIO
-
-# def load_image(filename):
-#     #image = PIL.Image.open(filename)
-
-#     image = PIL.Image.open(filename) # open colour image
-#     # image = image.convert('L') # convert image to black and white
-#     image = np.array(image)
-    
-#     return np.float32(image)
-
-#sys.argv 
-
 print(sys.argv)
 
 
@@ -62,14 +47,12 @@ outZip = os.path.join(saveDir, f"CNN_{task}_tests.zip")
 
 # Parameters
 kernel_s = 5
-# poolSize = 2
-# numKernels = int(sys.argv[4])
 batch_size = 32
 epochs = 100
 imageSize = 128
 
 
-
+# functions for extracting and loading train and test data
 def extract_train(inputZip,imageSize):
     with zipfile.ZipFile(inputZip, mode="r") as archive:
         # Separate files into train, validation and test
@@ -102,52 +85,18 @@ def extract_test(inputZip,test_set):
 
     return test
 
+# extracting training and testing data
 X_train, X_test_set, X_val = extract_train(inputZip_blur, imageSize)
 
 y_train, y_test_set, y_val = extract_train(inputZip_origin, imageSize)
 
 
-
-# Perform training using the zip file
-# with zipfile.ZipFile(inputZip, mode="r") as archive:
-#     # Separate files into train, validation and test
-#     train_set, test_set = train_test_split(archive.namelist(), test_size=0.3, random_state=0)
-#     val_set, test_set = train_test_split(test_set, test_size=0.3, random_state=0)
-#     for filename in train_set:
-#         data = archive.read(filename)
-#         image = cv2.imdecode(np.frombuffer(data, np.uint8), 1)
-        
-#         retval, buf = cv2.imencode('.jpeg', image)
-#         zipf.writestr(filename, buf)
-# zipf.close()
-
-# inputImg = np.load(path+'output_blur.npy')
-# outputImg = np.load(path+'output_blur.npy')
+# load illusions
 illusions = np.load('output/Test/ilussions.npy')
 
 print("Data loaded!!")
 
-
-# x = inputImg.astype('float32')
-# y = outputImg.astype('float32')
-# x_train /= 255
-# x_test /= 255
-# x /= 255
-# y /= 255
-
-
-# X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=randint(0, 100))
-
-
-# divide x_test into validation and test
-# x_val = X_test[:2000]
-# y_val = y_test[:2000]
-# x_test = X_test[2000:]
-# y_test = y_test[2000:]
-
-
-# print("Data Normalized!!")
-
+# defining neural net
 model = models.Sequential()
 
 model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid',input_shape=(128, 128, 3)))
@@ -155,16 +104,7 @@ model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
 model.add(Conv2D(24,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
 model.add(Conv2D(3,(kernel_s, kernel_s), padding='same',activation='sigmoid'))
 
-# input_img = Input(shape=(128, 128, 3))
-# x = Conv2D(3, (kernel_s, kernel_s), padding='same')(input_img)
-# x = Activation('sigmoid')(x)
-
-# x = Conv2D(3, (kernel_s, kernel_s), padding='same')(x)
-# decoded = Activation('sigmoid')(x)
-
-# model = Model(input_img, decoded)
 model.compile(optimizer='adam', loss='mean_squared_error')
-
 
 es_cb = EarlyStopping(monitor='val_loss', patience=2, verbose=1, mode='auto')
 chkpt = saveDir +f'{task}_model_simple.hdf5'
@@ -186,7 +126,7 @@ y_test = extract_test(inputZip_blur, y_test_set)
 score = model.evaluate(x_test, y_test, verbose=1)    
 
 
-## Compute PSNR and SSIM en test set
+## Compute PSNR and SSIM in test set
   
 out = model.predict(x_test)*255  
 
@@ -223,10 +163,6 @@ file.write('Mean SSIM'+str(np.mean(performance[:,1]))+'-'+str(np.std(performance
 file.write(chkpt)
 file.close() 
 
-#np.save(saveDir+'jean_denoise_results',out) 
 print('Saving Results ...')
 np.save(os.path.join(saveDir,f'Illusions_{task}'),outIllusions) 
-#np.save(saveDir+'jean_denoise_inputs',x_test) 
-#np.save(saveDir+'jean_denoise_labels',y_test) 
-
-#print('Loss function:'+str(score)+' Mean PSNR:'+str(meanPsnr)+' std:'+str(stdPsnr))                    
+                
