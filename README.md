@@ -1,4 +1,4 @@
-# Psychology 9221B: Intro to Neural Networks: Final Project
+# Psychology 9221B Intro to Neural Networks: Final Project
 
 ### Architectures for Denoising and deblurring Neural Networks
 - Architecture 1 (DN-Net denosing network, DB-Net deblurring network & RestoreNET)
